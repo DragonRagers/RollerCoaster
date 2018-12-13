@@ -1,0 +1,5 @@
+package roller.coaster;
+
+public abstract class Track {
+
+}

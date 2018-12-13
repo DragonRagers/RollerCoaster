@@ -1,0 +1,2 @@
+INDEX VERSION 1.130+/Volumes/User Space/Users/374512/RollerCoaster/.metadata/.plugins/org.eclipse.jdt.core
+3023026743.index
