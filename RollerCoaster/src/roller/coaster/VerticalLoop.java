@@ -1,9 +1,9 @@
 package roller.coaster;
 
-public class Loop extends Track {
+public class VerticalLoop extends Track {
 	public float radius;
 	
-	public Loop(float r) {
+	public VerticalLoop(float r) {
 		radius = r;
 		formTrack();
 	}
