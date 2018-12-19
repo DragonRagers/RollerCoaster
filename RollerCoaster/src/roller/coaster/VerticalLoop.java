@@ -14,6 +14,10 @@ public class Loop extends Track {
 		//			{<1, r + r*t/5, 0>							5+2pi<t<10+2pi	
 	}
 
+	private double reParam(double arclength) { 
+		return arclength/Math.sqrt((1/Math.pow(Math.PI,2))+Math.pow(radius,2)); 
+	}
+	
 	@Override
 	public void drawTrack() {
 		// TODO Auto-generated method stub
