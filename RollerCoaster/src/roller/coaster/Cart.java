@@ -1,5 +1,8 @@
 package roller.coaster;
 
 public class Cart {
-	//lol test
+	
+	double xVelocity;
+	double xPosition;
+	double xAccel;
 }
