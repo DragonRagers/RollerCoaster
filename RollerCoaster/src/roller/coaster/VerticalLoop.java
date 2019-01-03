@@ -6,7 +6,7 @@ public class VerticalLoop extends Track {
 	public VerticalLoop(Point i, float r, int dir) { //dir is direction, 0 - x, 1 - y (unimplemented assuming y)
 		init = i;
 		radius = r;
-		end.y = init.y+2*radius; 
+		end = Point.add(init, new Point(0,2*radius,0));
 		formTrack();
 	}
 	
@@ -20,13 +20,13 @@ public class VerticalLoop extends Track {
 		if (arcLength < radius) {
 			return Point.add(init, new Point(0,arcLength,0));
 		} else if (arcLength < radius + radius * 2 * Math.PI) {
-			return Point.add(init, new Point(0,radius + radius * Math.cos(reParam(arcLength)), radius * Math.sin(reParam(arcLength))));
+			return Point.add(init, new Point((arcLength - radius)/(2*radius),radius + radius * Math.cos(3*Math.PI/2 + reParam(arcLength)),radius + radius * Math.sin(3*Math.PI/2 + reParam(arcLength))));
 		}
-		return null;
+		return Point.add(init, new Point(Math.PI,5 + arcLength - (radius + radius * 2 * Math.PI), 0));
 	}
 
 	private double reParam(double arclength) { 
-		return arclength/Math.sqrt((1/Math.pow(Math.PI,2))+Math.pow(radius,2)); 
+		return (arclength-radius)/radius; 
 	}
 	
 	private void calcLength() {
@@ -40,8 +40,9 @@ public class VerticalLoop extends Track {
 	}
 
 	public static void main(String args[]) { //testing shit
-		for (double i = 0; i < 20; i+=.1) {
-			System.out.println(calcPosition(i));
+		VerticalLoop loop = new VerticalLoop(new Point(0,0,0), 5, 0);
+		for (double i = 0; i < 90; i+=.2) {
+			System.out.println(loop.calcPosition(i));
 		}
 	}
 	
