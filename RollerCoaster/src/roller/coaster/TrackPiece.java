@@ -16,5 +16,7 @@ public abstract class TrackPiece {
 	
 	public abstract void drawTrack();
 	
+	public abstract double arcLength();
 	
+	public abstract Point calcPosition(double arcLength);
 }

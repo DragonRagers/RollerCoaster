@@ -7,16 +7,17 @@ public class VerticalLoop extends TrackPiece {
 		init = i;
 		radius = r;
 		end = Point.add(init, new Point(0,2*radius,0));
-		formTrack();
 	}
 	
-	private void formTrack() {
-		//			{<0, r*t/5, 0>								0<t<5
-		//f(t)=		{<(t-5)/(2pi), r + rcos(t-5), rsin(t-5)>		5<t<5+2pi
-		//			{<1, r + r*t/5, 0>							5+2pi<t<10+2pi	
+	public void drawTrack() {
+		
 	}
 	
-	private Point calcPosition(double arcLength) {
+	public double arcLength() {
+		return 2 * radius + 2 * Math.PI * radius;
+	}
+	
+	public Point calcPosition(double arcLength) {
 		if (arcLength < radius) {
 			return Point.add(init, new Point(0,arcLength,0));
 		} else if (arcLength < radius + radius * 2 * Math.PI) {
@@ -29,15 +30,6 @@ public class VerticalLoop extends TrackPiece {
 		return (arclength-radius)/radius; 
 	}
 	
-	private void calcLength() {
-		
-	}
-	
-	@Override
-	public void drawTrack() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	public static void main(String args[]) { //testing shit
 		VerticalLoop loop = new VerticalLoop(new Point(0,0,0), 5, 0);
