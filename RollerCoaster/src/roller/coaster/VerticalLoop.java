@@ -1,6 +1,6 @@
 package roller.coaster;
 
-public class VerticalLoop extends Track {
+public class VerticalLoop extends TrackPiece {
 	public float radius;
 	
 	public VerticalLoop(Point i, float r, int dir) { //dir is direction, 0 - x, 1 - y (unimplemented assuming y)
