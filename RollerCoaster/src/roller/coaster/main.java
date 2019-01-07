@@ -82,6 +82,7 @@ public class main extends Application{
 					inclinePart.setEndX(startPoint.getCenterX() + 50);
 					inclinePart.setEndY(startPoint.getCenterY() - 50);
 					trackList.add(inclinePart);
+					trackStrings.add("Incline");
 				}
 				else {
 					for (Line l : trackList) {
@@ -91,6 +92,7 @@ public class main extends Application{
 							inclinePart.setEndX(l.getEndX() + 50);
 							inclinePart.setEndY(l.getEndY() - 50);
 							trackList.add(inclinePart);
+							trackStrings.add("Incline");
 							break;
 						}
 					}
@@ -126,6 +128,7 @@ public class main extends Application{
 					declinePart.setEndX(startPoint.getCenterX() + 50);
 					declinePart.setEndY(startPoint.getCenterY() + 50);
 					trackList.add(declinePart);
+					trackStrings.add("Decline");
 				}
 				else {
 					for (Line l : trackList) {
@@ -135,6 +138,7 @@ public class main extends Application{
 							declinePart.setEndX(l.getEndX() + 50);
 							declinePart.setEndY(l.getEndY() + 50);
 							trackList.add(declinePart);
+							trackStrings.add("Decline");
 							break;
 						}
 					}
@@ -170,6 +174,7 @@ public class main extends Application{
 					flatPart.setEndX(startPoint.getCenterX() + 50);
 					flatPart.setEndY(startPoint.getCenterY());
 					trackList.add(flatPart);
+					trackStrings.add("Flat");
 				}
 				else {
 					for (Line l : trackList) {
@@ -179,6 +184,7 @@ public class main extends Application{
 							flatPart.setEndX(l.getEndX() + 50);
 							flatPart.setEndY(l.getEndY());
 							trackList.add(flatPart);
+							trackStrings.add("Flat");
 							break;
 						}
 					}
