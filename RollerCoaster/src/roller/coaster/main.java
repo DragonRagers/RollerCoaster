@@ -2,6 +2,7 @@ package roller.coaster;
 
 import java.util.*;
 
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -10,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.shape.*;
 import javafx.scene.text.*;
+import javafx.scene.image.*;
 
 
 public class main extends Application{
@@ -35,10 +37,15 @@ public class main extends Application{
 		Text decline = new Text();
 		Text flat = new Text();
 		
+		Circle trash = new Circle(1200, 450, 15);
+		trash.setFill(Color.GRAY);
+		trash.setStroke(Color.BLACK);
+		
 		Circle startPoint = new Circle(40, 40, 8);
 		Circle endPoint = new Circle(1100, 400, 8);
 		startPoint.setFill(Color.GREEN);
 		endPoint.setFill(Color.RED);
+		
 		
 		incline.setText("INCLINE");
 		incline.setX(360);
@@ -102,10 +109,12 @@ public class main extends Application{
 			declinePart.setStrokeWidth(5);
 			//move decline part
 			declinePart.setOnMouseDragged(j -> {
-				declinePart.setStartX(j.getSceneX() - 25);
-				declinePart.setStartY(j.getSceneY() - 25);
-				declinePart.setEndX(j.getSceneX() + 25);
-				declinePart.setEndY(j.getSceneY() + 25);
+				if (!trackList.contains(declinePart)) {
+					declinePart.setStartX(j.getSceneX() - 25);
+					declinePart.setStartY(j.getSceneY() - 25);
+					declinePart.setEndX(j.getSceneX() + 25);
+					declinePart.setEndY(j.getSceneY() + 25);
+				}
 			});
 			//snap part to other parts
 			declinePart.setOnMouseReleased(j -> {
@@ -144,10 +153,12 @@ public class main extends Application{
 			flatPart.setStrokeWidth(5);
 			//move flat part
 			flatPart.setOnMouseDragged(j -> {
-				flatPart.setStartX(j.getSceneX() - 25);
-				flatPart.setStartY(j.getSceneY());
-				flatPart.setEndX(j.getSceneX() + 25);
-				flatPart.setEndY(j.getSceneY());
+				if (!trackList.contains(flatPart)) {
+					flatPart.setStartX(j.getSceneX() - 25);
+					flatPart.setStartY(j.getSceneY());
+					flatPart.setEndX(j.getSceneX() + 25);
+					flatPart.setEndY(j.getSceneY());
+				}
 			});
 			//snap part to other parts
 			flatPart.setOnMouseReleased(j -> {
@@ -181,7 +192,8 @@ public class main extends Application{
 		
 		//startPoint can be moved up and down
 		startPoint.setOnMouseDragged(e -> {
-			startPoint.setCenterY(e.getSceneY());
+			if (!(trackList.size() > 0)) {
+				startPoint.setCenterY(e.getSceneY());}
 		});
 		
 		//move endPoint
