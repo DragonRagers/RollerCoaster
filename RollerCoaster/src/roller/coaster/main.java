@@ -36,6 +36,8 @@ public class main extends Application{
 		Text incline = new Text();
 		Text decline = new Text();
 		Text flat = new Text();
+		Text loop = new Text();
+		
 		
 		Circle trash = new Circle(1200, 450, 15);
 		trash.setFill(Color.GRAY);
@@ -56,6 +58,10 @@ public class main extends Application{
 		flat.setText("FLAT");
 		flat.setY(440);
 		flat.setX(300);
+		loop.setText("LOOP");
+		loop.setY(440);
+		loop.setX(260);
+		
 		
 	
 		//creates an incline piece when text clicked
@@ -195,6 +201,67 @@ public class main extends Application{
 			myPane.getChildren().add(flatPart);
 		});
 		
+		//create loop part
+		loop.setOnMouseClicked(e -> {
+			Line loopBase = new Line(loop.getX() - 85, loop.getY(), loop.getX() + 85, loop.getY());
+			loopBase.setStroke(Color.BROWN);
+			loopBase.setStrokeWidth(5);
+			Circle loopCircle = new Circle(loop.getX(), loop.getY(), 55);
+			loopCircle.setStroke(Color.BROWN);
+			loopCircle.setFill(Color.WHITE);
+			loopCircle.setStrokeWidth(5);
+			//loopCircle.centerXProperty().bind(loopBase.startXProperty().add(loopBase.endXProperty()).divide(2));
+			//loopCircle.centerYProperty().bind(loopBase.endYProperty().subtract(loopCircle.getRadius()));
+			loopBase.startXProperty().bind(loopCircle.centerXProperty().subtract(85));
+			loopBase.startYProperty().bind(loopCircle.centerYProperty().add(loopCircle.getRadius()));
+			loopBase.endXProperty().bind(loopCircle.centerXProperty().add(85));
+			loopBase.endYProperty().bind(loopCircle.centerYProperty().add(loopCircle.getRadius()));
+			
+			/*loopBase.setOnMouseDragged(j -> {
+				if (!trackList.contains(loopBase)) {
+					loopBase.setStartX(j.getSceneX() - 85);
+					loopBase.setStartY(j.getSceneY());
+					loopBase.setEndX(j.getSceneX() + 85);
+					loopBase.setEndY(j.getSceneY());
+				}
+			});*/
+			loopCircle.setOnMouseDragged(j -> {
+				if (!trackList.contains(loopBase)) {
+					loopCircle.setCenterX(j.getSceneX());
+					loopCircle.setCenterY(j.getSceneY());
+				}
+			});
+			
+			/*snap part to other parts
+			loopCircle.setOnMouseReleased(j -> {
+				double x1 = loopBase.getStartX();
+				double y1 = loopBase.getStartY();
+				if (getDistance(x1, y1, startPoint.getCenterX(), startPoint.getCenterY()) < 10) {
+					loopBase.setStartX(startPoint.getCenterX());
+					loopBase.setStartY(startPoint.getCenterY());
+					loopBase.setEndX(startPoint.getCenterX() + 170);
+					loopBase.setEndY(startPoint.getCenterY());
+					trackList.add(loopBase);
+					trackStrings.add("Loop");
+				}
+				else {
+					for (Line l : trackList) {
+						if (getDistance(x1, y1, l.getEndX(), l.getEndY()) < 10) {
+							loopBase.setStartX(l.getEndX());
+							loopBase.setStartY(l.getEndY());
+							loopBase.setEndX(l.getEndX() + 170);
+							loopBase.setEndY(l.getEndY());
+							trackList.add(loopBase);
+							trackStrings.add("Loop");
+							break;
+						}
+					}
+				}
+				
+			});*/
+			
+			myPane.getChildren().addAll(loopBase, loopCircle);
+			});
 		
 		//startPoint can be moved up and down
 		startPoint.setOnMouseDragged(e -> {
@@ -209,7 +276,7 @@ public class main extends Application{
 		});
 		
 		
-		myPane.getChildren().addAll(incline, decline, flat, startPoint, endPoint);
+		myPane.getChildren().addAll(incline, decline, flat, loop, startPoint, endPoint);
 		
 		primaryStage.setScene(new Scene(myPane));
 		primaryStage.show();
