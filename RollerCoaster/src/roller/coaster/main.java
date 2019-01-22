@@ -1,7 +1,9 @@
 package roller.coaster;
 
 import java.util.*;
-
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -13,11 +15,17 @@ import javafx.stage.Stage;
 import javafx.scene.shape.*;
 import javafx.scene.text.*;
 import javafx.scene.image.*;
+import roller.coaster.*;
 
 
 public class main extends Application{
 	private Canvas myCanvas = new Canvas(1200, 500);
 	private Pane myPane = new Pane();
+	final ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
+
+	
+	
+	int pieceLength = 5;
 
 	public static void main(String[] args) {
 		Scanner keyboard = new Scanner(System.in);
@@ -33,7 +41,7 @@ public class main extends Application{
 		myPane.setMinWidth(1200);
 		myPane.setMinHeight(500);
 		ArrayList<Line> trackList = new ArrayList<Line>();
-		ArrayList<String> trackStrings = new ArrayList<String>();
+		ArrayList<TrackPiece> trackPieces = new ArrayList<TrackPiece>();
 		Text incline = new Text();
 		Text decline = new Text();
 		Text flat = new Text();
@@ -97,7 +105,7 @@ public class main extends Application{
 					inclinePart.setEndX(startPoint.getCenterX() + 50);
 					inclinePart.setEndY(startPoint.getCenterY() - 50);
 					trackList.add(inclinePart);
-					trackStrings.add("Incline");
+					trackPieces.add(new Straight(new Point(inclinePart.getEndX(), inclinePart.getEndY(), 0), pieceLength, 45));
 				}
 				else {
 					Line l = trackList.get(trackList.size() - 1);
@@ -107,7 +115,7 @@ public class main extends Application{
 							inclinePart.setEndX(l.getEndX() + 50);
 							inclinePart.setEndY(l.getEndY() - 50);
 							trackList.add(inclinePart);
-							trackStrings.add("Incline");
+							trackPieces.add(new Straight(new Point(inclinePart.getEndX(), inclinePart.getEndY(), 0), pieceLength, 45));
 							
 						}
 					}
@@ -143,7 +151,7 @@ public class main extends Application{
 					declinePart.setEndX(startPoint.getCenterX() + 50);
 					declinePart.setEndY(startPoint.getCenterY() + 50);
 					trackList.add(declinePart);
-					trackStrings.add("Decline");
+					trackPieces.add(new Straight(new Point(declinePart.getEndX(), declinePart.getEndY(), 0), pieceLength, -45));
 				}
 				else {
 					Line l = trackList.get(trackList.size() - 1);
@@ -153,8 +161,7 @@ public class main extends Application{
 							declinePart.setEndX(l.getEndX() + 50);
 							declinePart.setEndY(l.getEndY() + 50);
 							trackList.add(declinePart);
-							trackStrings.add("Decline");
-							
+							trackPieces.add(new Straight(new Point(declinePart.getEndX(), declinePart.getEndY(), 0), pieceLength, -45));							
 						}
 					}
 				
@@ -189,7 +196,7 @@ public class main extends Application{
 					flatPart.setEndX(startPoint.getCenterX() + 50);
 					flatPart.setEndY(startPoint.getCenterY());
 					trackList.add(flatPart);
-					trackStrings.add("Flat");
+					trackPieces.add(new Straight(new Point(flatPart.getEndX(), flatPart.getEndY(), 0), pieceLength, 0));
 				}
 				else {
 					Line l = trackList.get(trackList.size() - 1);
@@ -199,7 +206,7 @@ public class main extends Application{
 							flatPart.setEndX(l.getEndX() + 50);
 							flatPart.setEndY(l.getEndY());
 							trackList.add(flatPart);
-							trackStrings.add("Flat");
+							trackPieces.add(new Straight(new Point(flatPart.getEndX(), flatPart.getEndY(), 0), pieceLength, 0));
 						}
 					}
 				
@@ -238,7 +245,7 @@ public class main extends Application{
 					loopCircle.setCenterX(startPoint.getCenterX() + 85);
 					loopCircle.setCenterY(startPoint.getCenterY() - loopCircle.getRadius());
 					trackList.add(loopBase);
-					trackStrings.add("Loop");
+					trackPieces.add(new VerticalLoop(new Point(loopBase.getStartX(), loopBase.getStartY(), 0), (float)loopCircle.getRadius(), 0));
 				}
 				else {
 					Line l = trackList.get(trackList.size() - 1);
@@ -246,7 +253,7 @@ public class main extends Application{
 							loopCircle.setCenterX(l.getEndX() + 85);
 							loopCircle.setCenterY(l.getEndY() - loopCircle.getRadius());
 							trackList.add(loopBase);
-							trackStrings.add("Loop");
+							trackPieces.add(new VerticalLoop(new Point(loopBase.getStartX(), loopBase.getStartY(), 0), (float)loopCircle.getRadius(), 0));
 						}
 					}
 				
@@ -279,6 +286,19 @@ public class main extends Application{
 			}
 		});
 		
+		//output position and actual simulation
+		go.setOnMouseClicked(e -> {
+			for (TrackPiece t : trackPieces) {
+				ses.scheduleAtFixedRate(new Runnable() {
+					public void run() {
+						String toStat = simulate(t);
+						stats.setText(toStat);
+					}
+				}, 0, 1, TimeUnit.SECONDS);
+			}
+			ses.shutdown();
+		});
+		
 		
 		myPane.getChildren().addAll(incline, decline, flat, loop, go,stats, startPoint, endPoint);
 		
@@ -288,5 +308,10 @@ public class main extends Application{
 	
 	public double getDistance(double x1, double y1, double x2, double y2) {
 		return (Math.sqrt((Math.pow(x1 - x2, 2)) + Math.pow(y1 - y2, 2)));
+	}
+	
+	public String simulate(TrackPiece t) {
+		Point current = t.calcPosition(t.arcLength());
+		return "PositionX: " + current.x + "\nPositionY: " + current.y;
 	}
 }
