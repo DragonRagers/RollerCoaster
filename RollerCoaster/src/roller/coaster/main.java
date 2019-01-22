@@ -6,6 +6,7 @@ import java.util.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -37,7 +38,15 @@ public class main extends Application{
 		Text decline = new Text();
 		Text flat = new Text();
 		Text loop = new Text();
+		Button go = new Button();
+		Text stats = new Text("PositionX: \nPositionY: ");
 		
+		stats.setX(650);
+		stats.setY(420);
+		
+		go.setText("GOGOGOGOGO");
+		go.setLayoutX(500);
+		go.setLayoutY(420);
 		
 		Circle trash = new Circle(1200, 450, 15);
 		trash.setFill(Color.GRAY);
@@ -50,17 +59,17 @@ public class main extends Application{
 		
 		
 		incline.setText("INCLINE");
-		incline.setX(360);
+		incline.setX(320);
 		incline.setY(440);
 		decline.setText("DECLINE");
 		decline.setY(440);
-		decline.setX(440);
+		decline.setX(400);
 		flat.setText("FLAT");
 		flat.setY(440);
-		flat.setX(300);
+		flat.setX(260);
 		loop.setText("LOOP");
 		loop.setY(440);
-		loop.setX(260);
+		loop.setX(200);
 		
 		
 	
@@ -91,7 +100,7 @@ public class main extends Application{
 					trackStrings.add("Incline");
 				}
 				else {
-					for (Line l : trackList) {
+					Line l = trackList.get(trackList.size() - 1);
 						if (getDistance(x1, y1, l.getEndX(), l.getEndY()) < 10) {
 							inclinePart.setStartX(l.getEndX());
 							inclinePart.setStartY(l.getEndY());
@@ -99,10 +108,10 @@ public class main extends Application{
 							inclinePart.setEndY(l.getEndY() - 50);
 							trackList.add(inclinePart);
 							trackStrings.add("Incline");
-							break;
+							
 						}
 					}
-				}
+				
 				
 			});
 			//put part on pane
@@ -137,7 +146,7 @@ public class main extends Application{
 					trackStrings.add("Decline");
 				}
 				else {
-					for (Line l : trackList) {
+					Line l = trackList.get(trackList.size() - 1);
 						if (getDistance(x1, y1, l.getEndX(), l.getEndY()) < 10) {
 							declinePart.setStartX(l.getEndX());
 							declinePart.setStartY(l.getEndY());
@@ -145,10 +154,10 @@ public class main extends Application{
 							declinePart.setEndY(l.getEndY() + 50);
 							trackList.add(declinePart);
 							trackStrings.add("Decline");
-							break;
+							
 						}
 					}
-				}
+				
 				
 			});
 			//put part on pane
@@ -183,7 +192,7 @@ public class main extends Application{
 					trackStrings.add("Flat");
 				}
 				else {
-					for (Line l : trackList) {
+					Line l = trackList.get(trackList.size() - 1);
 						if (getDistance(x1, y1, l.getEndX(), l.getEndY()) < 10) {
 							flatPart.setStartX(l.getEndX());
 							flatPart.setStartY(l.getEndY());
@@ -191,10 +200,9 @@ public class main extends Application{
 							flatPart.setEndY(l.getEndY());
 							trackList.add(flatPart);
 							trackStrings.add("Flat");
-							break;
 						}
 					}
-				}
+				
 				
 			});
 			//put part on pane
@@ -210,21 +218,11 @@ public class main extends Application{
 			loopCircle.setStroke(Color.BROWN);
 			loopCircle.setFill(Color.WHITE);
 			loopCircle.setStrokeWidth(5);
-			//loopCircle.centerXProperty().bind(loopBase.startXProperty().add(loopBase.endXProperty()).divide(2));
-			//loopCircle.centerYProperty().bind(loopBase.endYProperty().subtract(loopCircle.getRadius()));
 			loopBase.startXProperty().bind(loopCircle.centerXProperty().subtract(85));
 			loopBase.startYProperty().bind(loopCircle.centerYProperty().add(loopCircle.getRadius()));
 			loopBase.endXProperty().bind(loopCircle.centerXProperty().add(85));
 			loopBase.endYProperty().bind(loopCircle.centerYProperty().add(loopCircle.getRadius()));
 			
-			/*loopBase.setOnMouseDragged(j -> {
-				if (!trackList.contains(loopBase)) {
-					loopBase.setStartX(j.getSceneX() - 85);
-					loopBase.setStartY(j.getSceneY());
-					loopBase.setEndX(j.getSceneX() + 85);
-					loopBase.setEndY(j.getSceneY());
-				}
-			});*/
 			loopCircle.setOnMouseDragged(j -> {
 				if (!trackList.contains(loopBase)) {
 					loopCircle.setCenterX(j.getSceneX());
@@ -232,33 +230,28 @@ public class main extends Application{
 				}
 			});
 			
-			/*snap part to other parts
+			//snap part to other parts
 			loopCircle.setOnMouseReleased(j -> {
 				double x1 = loopBase.getStartX();
 				double y1 = loopBase.getStartY();
 				if (getDistance(x1, y1, startPoint.getCenterX(), startPoint.getCenterY()) < 10) {
-					loopBase.setStartX(startPoint.getCenterX());
-					loopBase.setStartY(startPoint.getCenterY());
-					loopBase.setEndX(startPoint.getCenterX() + 170);
-					loopBase.setEndY(startPoint.getCenterY());
+					loopCircle.setCenterX(startPoint.getCenterX() + 85);
+					loopCircle.setCenterY(startPoint.getCenterY() - loopCircle.getRadius());
 					trackList.add(loopBase);
 					trackStrings.add("Loop");
 				}
 				else {
-					for (Line l : trackList) {
+					Line l = trackList.get(trackList.size() - 1);
 						if (getDistance(x1, y1, l.getEndX(), l.getEndY()) < 10) {
-							loopBase.setStartX(l.getEndX());
-							loopBase.setStartY(l.getEndY());
-							loopBase.setEndX(l.getEndX() + 170);
-							loopBase.setEndY(l.getEndY());
+							loopCircle.setCenterX(l.getEndX() + 85);
+							loopCircle.setCenterY(l.getEndY() - loopCircle.getRadius());
 							trackList.add(loopBase);
 							trackStrings.add("Loop");
-							break;
 						}
 					}
-				}
 				
-			});*/
+				
+			});
 			
 			myPane.getChildren().addAll(loopBase, loopCircle);
 			});
@@ -274,9 +267,20 @@ public class main extends Application{
 			endPoint.setCenterX(e.getSceneX());
 			endPoint.setCenterY(e.getSceneY());
 		});
+		//lock endPoint
+		endPoint.setOnMouseReleased(e -> {
+			double x1 = endPoint.getCenterX();
+			double y1 = endPoint.getCenterY();
+			Line l = trackList.get(trackList.size() - 1);
+			if (getDistance(x1, y1, l.getEndX(), l.getEndY()) < 10) {
+				endPoint.setCenterX(l.getEndX());
+				endPoint.setCenterY(l.getEndY());
+				//send trackList
+			}
+		});
 		
 		
-		myPane.getChildren().addAll(incline, decline, flat, loop, startPoint, endPoint);
+		myPane.getChildren().addAll(incline, decline, flat, loop, go,stats, startPoint, endPoint);
 		
 		primaryStage.setScene(new Scene(myPane));
 		primaryStage.show();
